@@ -4,6 +4,7 @@ from urlparse import urlparse
 import os.path
 import time
 import traceback
+import platform
 
 from couchpotato.core.event import fireEvent, addEvent
 from couchpotato.core.helpers.encoding import ss, toSafeString, \
@@ -110,7 +111,8 @@ class Plugin(object):
                 f.close()
 
                 try:
-                    os.chmod(path, Env.getPermission('file'))
+                    if "synology" not in platform._syscmd_uname('-a'):
+                        os.chmod(path, Env.getPermission('file'))
                 except:
                     log.error('Failed writing permission to file "%s": %s', (path, traceback.format_exc()))
 
@@ -124,7 +126,8 @@ class Plugin(object):
         try:
             if not os.path.isdir(path):
                 os.makedirs(path, Env.getPermission('folder'))
-                os.chmod(path, Env.getPermission('folder'))
+                if "synology" not in platform._syscmd_uname('-a'):
+                    os.chmod(path, Env.getPermission('folder'))
             return True
         except Exception as e:
             log.error('Unable to create folder "%s": %s', (path, e))
