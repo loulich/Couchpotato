@@ -59,7 +59,7 @@ class OMDBAPI(MovieProvider):
             return {}
 
         cache_key = 'omdbapi.cache.%s' % identifier
-        self.getCache(cache_key, self.urls['info'] % (self.getApiKey(), identifier), timeout = 3, headers = {'User-Agent': Env.getIdentifier()})
+        cached = self.getCache(cache_key, self.urls['info'] % identifier, timeout = 3, headers = {'User-Agent': Env.getIdentifier()})
 
         if cached:
             result = self.parseMovie(cached)
