@@ -1,11 +1,11 @@
-﻿import json
+import json
 import re
 import traceback
 
 from couchpotato import Env
 from couchpotato.core.event import addEvent, fireEvent
 from couchpotato.core.helpers.encoding import tryUrlencode
-from couchpotato.core.helpers.variable import tryInt, tryFloat, splitString, fillingLanguages
+from couchpotato.core.helpers.variable import tryInt, tryFloat, splitString
 from couchpotato.core.logger import CPLog
 from couchpotato.core.media.movie.providers.base import MovieProvider
 
@@ -29,9 +29,9 @@ class OMDBAPI(MovieProvider):
         addEvent('movie.search', self.search)
         addEvent('movie.info', self.getInfo)
 
-    def search(self, q, limit = 5):
+    def search(self, q, limit = 12):
         if self.isDisabled():
-             return [] 
+            return []
 
         name_year = fireEvent('scanner.name_year', q, single = True)
 
@@ -117,15 +117,14 @@ class OMDBAPI(MovieProvider):
                 'directors': splitString(movie.get('Director', '')),
                 'writers': splitString(movie.get('Writer', '')),
                 'actors': splitString(movie.get('Actors', '')),
-                'languages' : fillingLanguages(splitString(movie.get('Language', '')))
             }
             movie_data = dict((k, v) for k, v in movie_data.items() if v)
         except:
             log.error('Failed parsing IMDB API json: %s', traceback.format_exc())
 
         return movie_data
-    
-   def isDisabled(self):
+
+    def isDisabled(self):
         if self.getApiKey() == '':
             log.error('No API key provided.')
             return True
@@ -145,8 +144,8 @@ class OMDBAPI(MovieProvider):
             runtime += tryInt(nr) * (60 if 'h' is str(size)[0] else 1)
 
         return runtime
-    
-    
+
+
 config = [{
     'name': 'omdbapi',
     'groups': [
