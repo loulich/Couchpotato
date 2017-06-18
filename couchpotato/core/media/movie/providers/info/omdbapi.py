@@ -147,7 +147,7 @@ class OMDBAPI(MovieProvider):
         return runtime
     
     
-    config = [{
+config = [{
     'name': 'omdbapi',
     'groups': [
         {
